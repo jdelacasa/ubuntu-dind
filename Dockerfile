@@ -58,5 +58,14 @@ RUN set -eux; \
     docker-compose version && \
     ln -s /usr/local/bin/docker-compose /usr/local/lib/docker/cli-plugins/docker-compose
 
+
+# Install utilidades auxiliares
+RUN set -eux; \
+    apt-get update && apt-get install -y \
+    git htop tmux python3-pip vim \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+
 ENTRYPOINT ["entrypoint.sh"]
 CMD ["bash"]
