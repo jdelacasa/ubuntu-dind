@@ -23,6 +23,14 @@ docker run -it --runtime=sysbox-runc cruizba/ubuntu-dind
 4. Easy to extend, customize and use.
 5. Always updated with current buildx, compose and docker versions.
 
+## Multiarch Compile
+
+```
+docker buildx create --name multi-builder --use
+docker buildx inspect --bootstrap
+docker buildx build --platform linux/amd64,linux/arm64 -t jdelacasa/ubuntu-dind:v1 --push .
+```
+
 ## Table of Contents
 
 1. [Credits](#1-credits)
