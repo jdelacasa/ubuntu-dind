@@ -67,5 +67,48 @@ RUN set -eux; \
 
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
+# Install kind
+RUN set -eux; \
+    if [ "$(uname -m)" = "x86_64" ]; then \
+        curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.30.0/kind-linux-amd64; \
+    elif [ "$(uname -m)" = "aarch64" ]; then \
+        curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.30.0/kind-linux-arm64; \
+    fi && \
+    chmod +x ./kind && \
+    mv ./kind /usr/local/bin/kind
+
+# Install kubectl
+RUN set -eux; \
+    if [ "$(uname -m)" = "x86_64" ]; then \
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"; \
+    elif [ "$(uname -m)" = "aarch64" ]; then \
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl"; \
+    fi && \
+    chmod +x ./kubectl && \
+    mv ./kubectl /usr/local/bin/kubectl
+
+# Install k9s
+RUN curl -sS https://webinstall.dev/k9s | bash
+
+# Install k3d
+RUN curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+
+RUN set -eux; \
+    apt-get update && apt-get install -y \
+    kubecolor net-tools iputils-ping sudo\
+    && rm -rf /var/lib/apt/lists/*
+
+
+# Instalar nvm y Node.js
+ENV NVM_DIR /root/.nvm
+ENV NODE_VERSION v22.18.0  # Especifica la versión exacta que deseas
+
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash && \
+    . "$NVM_DIR/nvm.sh" && \
+    nvm install $NODE_VERSION && \
+    nvm alias default $NODE_VERSION && \
+    nvm use default
+
+    
 ENTRYPOINT ["entrypoint.sh"]
 CMD ["bash"]
