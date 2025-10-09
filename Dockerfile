@@ -95,7 +95,7 @@ RUN curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
 
 RUN set -eux; \
     apt-get update && apt-get install -y \
-    kubecolor net-tools iputils-ping sudo\
+    kubecolor net-tools iputils-ping sudo expect-dev\
     && rm -rf /var/lib/apt/lists/*
 
 
